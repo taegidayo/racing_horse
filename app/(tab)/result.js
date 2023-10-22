@@ -6,9 +6,11 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import * as WebBrowser from "expo-web-browser";
 // import { COLORS } from "../../constants";
 import { COLORS } from "../../constants";
 import { router } from "expo-router";
+import { FontAwesome5 } from "@expo/vector-icons";
 const ResultPage = () => {
   const [date, setDate] = useState([]);
   const [exRacing, setExRacing] = useState([]);
@@ -135,6 +137,7 @@ const ResultPage = () => {
                 <Text style={styles.raceTable(20)}>등급</Text>
 
                 <Text style={styles.raceTable(10)}>출전수</Text>
+                <Text style={styles.raceTable(10)}>경기영상</Text>
               </View>
             ) : (
               <Text></Text>
@@ -166,6 +169,24 @@ const ResultPage = () => {
                     <Text style={styles.raceData(10)}>
                       {item.horses.length}
                     </Text>
+                    <TouchableOpacity
+                      style={styles.raceData(10)}
+                      onPress={async () => {
+                        var url = `http://kra.fiveplayer.co.kr/player.php?f=${item.rcDate}/`;
+                        if ("서울" === item.meet) url += `s${item.rcNo}r`;
+                        else if ("부산경남" === item.meet)
+                          url += `b${item.rcNo}r`;
+                        else url += `j${item.rcNo}r`;
+
+                        await WebBrowser.openBrowserAsync(url);
+                      }}
+                    >
+                      <FontAwesome5
+                        name="play-circle"
+                        size={25}
+                        color="black"
+                      />
+                    </TouchableOpacity>
                   </TouchableOpacity>
                 );
               })
